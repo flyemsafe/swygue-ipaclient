@@ -1,0 +1,4 @@
+search {{ ipaclient_dns_search_domain }}
+{% for server in ipaclient_dns_servers %}
+nameserver {{ server }}
+{% endfor %}

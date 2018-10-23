@@ -1,0 +1,51 @@
+---
+# tasks file for ipa-client
+- name: Checking for Required Variables
+  fail: msg="Variable '{{ item }}' is not defined"
+  when: item is not defined
+  with_items: "{{ required_vars }}"
+
+- name: Update resolv.conf
+  template:
+    src: resolv.conf.j2
+    dest: /etc/resolv.conf
+
+- debug:
+    msg: "System FQDN: {{ ansible_fqdn }}"
+
+- debug:
+    msg: "ipclient_ipa_force_hostname: {{ ipclient_ipa_force_hostname | default('__undefined__') }}"
+
+- name: Check hostname on host
+  fail:
+    msg: "The hostname is invalid and no ipclient_ipa_force_hostname passed in.  Hostname: {{ ansible_fqdn }}"
+  when:
+    - ansible_fqdn.split('.')[0] == "localhost"
+    - ipclient_ipa_force_hostname | default('__undefined__') == "__undefined__"
+
+- name: Install IDM client
+  package:
+    name: "{{ ipa_client_pkg }}"
+    state: present
+
+- name: Run client install utility
+  shell: >
+    ipa-client-install
+    -U
+    -p {{ ipaclient_join_account }}
+    -w $JOIN_PASSWORD
+    --mkhomedir
+    {{ '--server %s' % ipaclient_ipa_server if ipaclient_ipa_server | default(False) else '' }}
+    {{ '--domain %s' % ipaclient_ipa_domain if ipaclient_ipa_domain | default(False) else '' }}
+    {{ '--realm %s' % ipaclient_ipa_realm if ipaclient_ipa_realm | default(False) else '' }}
+    {{ '--hostname %s' % ipclient_ipa_force_hostname if ipclient_ipa_force_hostname | default(False) else '' }}
+    {{ '--force-join' if ipa_force_join | default(True) else '' }}
+    {{ '--request-cert' if ipa_request_cert | default(False) else '' }}
+    {{ '--configure-firefox' if ipaclient_ipa_configure_firefox | default(False) else '' }}
+    --all-ip-addresses
+    --enable-dns-updates
+    --force-ntpd
+  args:
+    creates: /etc/krb5.keytab
+  environment:
+    JOIN_PASSWORD: "{{ ipaclient_join_password }}"

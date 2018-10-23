@@ -1,0 +1,33 @@
+- name: Remove IDM Client
+  package:
+    name: "{{ ipa_client_pkg }}"
+    state: present
+
+- name: Remove IDM Client
+  shell: >
+    ipa-client-install -U --uninstall
+  register: unregister
+  ignore_errors: yes
+
+- name: Ensure host and its DNS record is absent
+  ipa_host:
+    name: "{{ ansible_fqdn }}"
+    state: absent
+    ipa_host: "{{ ipaclient_ipa_server }}"
+    ipa_user: "{{ ipaclient_join_account }}"
+    ipa_pass: "{{ ipaclient_join_password }}"
+    update_dns: True
+    validate_certs: False
+
+- name: remove /etc/krb5.keytab
+  file:
+    path: /etc/krb5.keytab
+    state: absent
+
+- name: Install IDM client
+  package:
+    name: "{{ ipa_client_pkg }}"
+    state: absent
+
+- name: Show unregister results
+  debug: msg="{{ unregister }}"

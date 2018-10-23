@@ -1,0 +1,7 @@
+---
+# vars file for ipa-client
+required_vars:
+- ipaclient_dns_servers
+- ipaclient_dns_search_domain
+- ipaclient_join_account
+- ipaclient_join_password
