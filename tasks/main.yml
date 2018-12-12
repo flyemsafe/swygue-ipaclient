@@ -1,8 +1,8 @@
 ---
 - name: REGISTER|join system to IDM
   include_tasks: join.yml
-  when: not ipaclient_remove
+  when: (not ipaclient_remove) or (ipaclient_remove == "false")
 
 - name: UNREGISTER|remove system from IDM
   include_tasks: remove.yml
-  when: ipaclient_remove
+  when: (ipaclient_remove) or (ipaclient_remove == "true")
