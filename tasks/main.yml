@@ -1,8 +1,13 @@
 ---
+- name: what is the status of ipaclient_remove
+  debug:
+    msg: "ipaclient_remove is false"
+  when: ipaclient_remove == "false"
+
 - name: REGISTER|join system to IDM
   include_tasks: join.yml
   when: (not ipaclient_remove) or (ipaclient_remove == "false")
-
+  
 - name: UNREGISTER|remove system from IDM
   include_tasks: remove.yml
   when: (ipaclient_remove) or (ipaclient_remove == "true")

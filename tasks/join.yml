@@ -28,6 +28,11 @@
     name: "{{ ipa_client_pkg }}"
     state: present
 
+- name: clean out old files
+  file:
+    state: absent
+    path: /etc/ipa/ca.crt
+
 - name: Run client install utility
   shell: >
     ipa-client-install
