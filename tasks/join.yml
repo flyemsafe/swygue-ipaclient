@@ -49,7 +49,6 @@
     {{ '--configure-firefox' if ipaclient_ipa_configure_firefox | default(False) else '' }}
     --all-ip-addresses
     --enable-dns-updates
-    --force-ntpd
   args:
     creates: /etc/krb5.keytab
   environment:

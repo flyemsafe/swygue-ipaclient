@@ -17,9 +17,9 @@ ipaclient_dns_servers:
  - server2
 ```
 
-* Set to False to register or True to Unregister from IDM server.
+*  Set to `present` to JOIN and `absent` to REMOVE from IdM
 ```
-ipaclient_remove: False
+ipaclient_state: present
 ```
 * Force ipa-client-install --hostname <name>
 ```
