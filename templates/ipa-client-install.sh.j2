@@ -1,0 +1,16 @@
+#!/bin/bash
+
+ipa-client-install -U --mkhomedir \
+-p {{ ipaclient_join_account }} \
+-w $JOIN_PASSWORD \
+{{ '--server %s' % ipaclient_ipa_server if ipaclient_ipa_server | default(False) else '' }} \
+{{ '--domain %s' % ipaclient_ipa_domain if ipaclient_ipa_domain | default(False) else '' }} \
+{{ '--realm %s' % ipaclient_ipa_realm if ipaclient_ipa_realm | default(False) else '' }} \
+{{ '--hostname %s' % ipclient_ipa_force_hostname if ipclient_ipa_force_hostname | default(False) else '' }} \
+{{ '--force-join' if ipa_force_join | default(True) else '' }} \
+{{ '--request-cert' if ipa_request_cert | default(False) else '' }} \
+{{ '--configure-firefox' if ipaclient_ipa_configure_firefox | default(False) else '' }} \
+--all-ip-addresses \
+--enable-dns-updates
+
+exit 0

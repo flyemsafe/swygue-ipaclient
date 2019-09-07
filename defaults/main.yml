@@ -4,3 +4,6 @@ ipaclient_dns_servers:
   - 172.23.11.14
   - 172.23.11.13
   - 172.23.11.12
+  
+ipa_client_pkg: 
+ipaclient_state:
